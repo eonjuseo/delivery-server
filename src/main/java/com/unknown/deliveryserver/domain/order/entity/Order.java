@@ -41,5 +41,5 @@ public class Order extends BaseEntity {
     @Comment("주문 상태")
     @Column(name = "status", columnDefinition = "VARCHAR(20)")
     @Convert(converter = OrderStatusConverter.class)
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.WAITING_ACCEPT;
 }

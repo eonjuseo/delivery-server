@@ -35,8 +35,12 @@ public class HttpResponse {
 
         // 404
         NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 리소스입니다."),
-        NOT_FOUND_STOCK_STATUS(HttpStatus.NOT_FOUND, "존재하지 않는 재고 상태 입니다."),
-        NOT_FOUND_ORDER_STATUS(HttpStatus.NOT_FOUND, "존재하지 않는 재고 상태 입니다."),
+        NOT_FOUND_STOCK_STATUS(HttpStatus.NOT_FOUND, "존재하지 않는 재고 상태입니다."),
+        NOT_FOUND_ORDER_STATUS(HttpStatus.NOT_FOUND, "존재하지 않는 주문 상태입니다."),
+        NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "존재하지 않는 주문입니다."),
+        NOT_FOUND_RESTAURANT(HttpStatus.NOT_FOUND, "존재하지 않는 가게입니다."),
+        NOT_FOUND_MENU(HttpStatus.NOT_FOUND, "존재하지 않는 메뉴입니다."),
+        NOT_FOUND_OPTION_DETAIL(HttpStatus.NOT_FOUND, "존재하지 않는 옵션 상세입니다."),
 
         // 405
         METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 HTTP METHOD 입니다."),
