@@ -14,6 +14,7 @@ import java.util.List;
 public class OrderResponse {
     private Long id;
     private Long restaurantId;
+    private String restaurantName;
     private Long contact;
     private String address;
     private BigDecimal totalPrice;
@@ -24,6 +25,7 @@ public class OrderResponse {
         return OrderResponse.builder()
                 .id(order.getId())
                 .restaurantId(order.getRestaurant().getId())
+                .restaurantName(order.getRestaurant().getName())
                 .contact(order.getContact())
                 .address(order.getAddress())
                 .totalPrice(totalPrice)
