@@ -2,9 +2,11 @@ package com.unknown.deliveryserver.domain.restaurant.api;
 
 import com.unknown.deliveryserver.domain.restaurant.application.RestaurantServiceImpl;
 import com.unknown.deliveryserver.domain.restaurant.dto.RestaurantResponse;
+import com.unknown.deliveryserver.domain.restaurant.entity.Restaurant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,4 +25,9 @@ public class RestaurantController {
         return ResponseEntity.ok().body(restaurantResponse);
     }
 
+    @GetMapping("{restaurantId}")
+    public ResponseEntity<Restaurant> getRestaurant(@PathVariable Long restaurantId) {
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+        return ResponseEntity.ok().body(restaurant);
+    }
 }
