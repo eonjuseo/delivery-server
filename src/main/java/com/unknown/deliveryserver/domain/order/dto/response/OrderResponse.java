@@ -5,6 +5,7 @@ import com.unknown.deliveryserver.domain.order.enumerated.OrderStatus;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -13,23 +14,23 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderResponse {
     private Long id;
-    private Long restaurantId;
     private String restaurantName;
     private Long contact;
     private String address;
     private BigDecimal totalPrice;
     private OrderStatus status;
+    private LocalDateTime createdAt;
     private List<OrderMenuResponse> orderMenuList;
 
     public static OrderResponse of(Order order, List<OrderMenuResponse> orderMenuList, BigDecimal totalPrice) {
         return OrderResponse.builder()
                 .id(order.getId())
-                .restaurantId(order.getRestaurant().getId())
                 .restaurantName(order.getRestaurant().getName())
                 .contact(order.getContact())
                 .address(order.getAddress())
                 .totalPrice(totalPrice)
                 .status(order.getStatus())
+                .createdAt(order.getCreatedAt())
                 .orderMenuList(orderMenuList)
                 .build();
     }
