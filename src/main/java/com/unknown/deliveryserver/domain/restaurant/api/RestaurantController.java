@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/v1/restaurant")
 @RestController
 public class RestaurantController {
-
     private final RestaurantServiceImpl restaurantService;
 
     @GetMapping

@@ -1,6 +1,6 @@
-package com.unknown.deliveryserver.domain.order.dto.response;
+package com.unknown.deliveryserver.domain.order.orderoption.dto;
 
-import com.unknown.deliveryserver.domain.order.entity.OrderOption;
+import com.unknown.deliveryserver.domain.order.orderoption.entity.OrderOption;
 import lombok.*;
 
 import java.math.BigDecimal;

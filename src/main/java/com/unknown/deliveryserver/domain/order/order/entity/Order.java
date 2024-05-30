@@ -1,4 +1,4 @@
-package com.unknown.deliveryserver.domain.order.entity;
+package com.unknown.deliveryserver.domain.order.order.entity;
 
 import com.unknown.deliveryserver.domain.order.enumerated.OrderStatus;
 import com.unknown.deliveryserver.domain.restaurant.entity.Restaurant;

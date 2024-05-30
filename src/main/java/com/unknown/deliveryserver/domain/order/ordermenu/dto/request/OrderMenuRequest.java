@@ -1,4 +1,4 @@
-package com.unknown.deliveryserver.domain.order.dto.request;
+package com.unknown.deliveryserver.domain.order.ordermenu.dto.request;
 
 import lombok.*;
 

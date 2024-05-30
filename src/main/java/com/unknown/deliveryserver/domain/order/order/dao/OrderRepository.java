@@ -1,6 +1,6 @@
-package com.unknown.deliveryserver.domain.order.dao;
+package com.unknown.deliveryserver.domain.order.order.dao;
 
-import com.unknown.deliveryserver.domain.order.entity.Order;
+import com.unknown.deliveryserver.domain.order.order.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
