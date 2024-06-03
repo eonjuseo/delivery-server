@@ -132,7 +132,8 @@ public class OrderServiceImpl implements OrderService {
                 optionTotalPrice = optionTotalPrice.add(orderOption.getOptionDetail().getOptionPrice());
             }
 
-            BigDecimal menuTotalPrice = (menuPrice.add(optionTotalPrice).multiply(BigDecimal.valueOf(orderMenu.getQuantity())));
+            BigDecimal menuTotalPrice = (menuPrice.add(optionTotalPrice)
+                                        .multiply(BigDecimal.valueOf(orderMenu.getQuantity())));
             totalPrice = totalPrice.add(menuTotalPrice);
         }
 
