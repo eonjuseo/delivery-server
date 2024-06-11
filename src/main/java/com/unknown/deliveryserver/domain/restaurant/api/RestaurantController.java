@@ -1,16 +1,14 @@
 package com.unknown.deliveryserver.domain.restaurant.api;
 
-import com.unknown.deliveryserver.domain.order.order.application.OrderServiceImpl;
+import com.unknown.deliveryserver.domain.order.order.application.OrderService;
 import com.unknown.deliveryserver.domain.order.order.dto.response.OrderResponse;
-import com.unknown.deliveryserver.domain.restaurant.application.RestaurantServiceImpl;
+import com.unknown.deliveryserver.domain.restaurant.application.RestaurantService;
 import com.unknown.deliveryserver.domain.restaurant.dto.RestaurantResponse;
 import com.unknown.deliveryserver.domain.restaurant.entity.Restaurant;
+import com.unknown.deliveryserver.global.common.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,8 +16,8 @@ import java.util.List;
 @RequestMapping("/v1/restaurants")
 @RestController
 public class RestaurantController {
-    private final RestaurantServiceImpl restaurantService;
-    private final OrderServiceImpl orderService;
+    private final RestaurantService restaurantService;
+    private final OrderService orderService;
 
     @GetMapping
     public ResponseEntity<List<RestaurantResponse>> getRestaurants() {
@@ -34,8 +32,13 @@ public class RestaurantController {
     }
 
     @GetMapping("{id}/orders")
-    public ResponseEntity<List<OrderResponse>> getOrdersByRestaurant(@PathVariable("id") Long restaurantId) {
-        List<OrderResponse> orderResponse = orderService.getOrdersByRestaurantId(restaurantId);
+    public ResponseEntity<PageResponse<OrderResponse>> getOrdersByRestaurant(@PathVariable("id") Long restaurantId,
+//                                                                             @RequestParam(value = "keyword", defaultValue = "") String keyword,
+//                                                                             @RequestParam(value = "keywordType", defaultValue = "") @Schema(example = "month,week,day") String keywordType,
+                                                                             @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                             @RequestParam(name = "size", defaultValue = "20") int size) {
+//        List<String> parseType = List.of(keywordType.split(","));
+        PageResponse<OrderResponse> orderResponse = PageResponse.of(orderService.getOrdersByRestaurantId(restaurantId, page, size));
 
         return ResponseEntity.ok().body(orderResponse);
     }

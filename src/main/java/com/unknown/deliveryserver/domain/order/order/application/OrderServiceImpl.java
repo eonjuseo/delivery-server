@@ -4,23 +4,27 @@ import com.unknown.deliveryserver.domain.menu.menu.dao.MenuRepository;
 import com.unknown.deliveryserver.domain.menu.menu.entity.Menu;
 import com.unknown.deliveryserver.domain.menu.optiondetail.dao.OptionDetailRepository;
 import com.unknown.deliveryserver.domain.menu.optiondetail.entity.OptionDetail;
-import com.unknown.deliveryserver.domain.order.ordermenu.dao.OrderMenuRepository;
-import com.unknown.deliveryserver.domain.order.orderoption.dao.OrderOptionRepository;
+import com.unknown.deliveryserver.domain.order.enumerated.OrderStatus;
 import com.unknown.deliveryserver.domain.order.order.dao.OrderRepository;
-import com.unknown.deliveryserver.domain.order.ordermenu.dto.request.OrderMenuRequest;
 import com.unknown.deliveryserver.domain.order.order.dto.request.OrderRequest;
-import com.unknown.deliveryserver.domain.order.ordermenu.dto.response.OrderMenuResponse;
-import com.unknown.deliveryserver.domain.order.orderoption.dto.OrderOptionResponse;
 import com.unknown.deliveryserver.domain.order.order.dto.response.OrderResponse;
 import com.unknown.deliveryserver.domain.order.order.entity.Order;
+import com.unknown.deliveryserver.domain.order.ordermenu.dao.OrderMenuRepository;
+import com.unknown.deliveryserver.domain.order.ordermenu.dto.request.OrderMenuRequest;
+import com.unknown.deliveryserver.domain.order.ordermenu.dto.response.OrderMenuResponse;
 import com.unknown.deliveryserver.domain.order.ordermenu.entity.OrderMenu;
+import com.unknown.deliveryserver.domain.order.orderoption.dao.OrderOptionRepository;
+import com.unknown.deliveryserver.domain.order.orderoption.dto.OrderOptionResponse;
 import com.unknown.deliveryserver.domain.order.orderoption.entity.OrderOption;
-import com.unknown.deliveryserver.domain.order.enumerated.OrderStatus;
 import com.unknown.deliveryserver.domain.restaurant.dao.RestaurantRepository;
 import com.unknown.deliveryserver.domain.restaurant.entity.Restaurant;
 import com.unknown.deliveryserver.global.exception.BusinessException;
 import com.unknown.deliveryserver.global.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,19 +108,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getOrdersByRestaurantId(Long restaurantId) {
-        List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+    public Page<OrderResponse> getOrdersByRestaurantId(Long restaurantId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orders = orderRepository.findByRestaurantId(pageable, restaurantId);
 
         List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Order order : orders) {
-            List<OrderMenu> orderMenuList = orderMenuRepository.findByOrderId(order.getId());
+            for (Order order : orders) {
+                List<OrderMenu> orderMenuList = orderMenuRepository.findByOrderId(order.getId());
             List<OrderMenuResponse> orderMenuResponses = createOrderMenuResponses(orderMenuList);
 
             BigDecimal totalPrice = getTotalPrice(orderMenuList);
             orderResponses.add(OrderResponse.of(order, orderMenuResponses, totalPrice));
         }
 
-        return orderResponses;
+//        return new PageImpl<>(orderResponses, pageable, orders.getTotalElements());
+        return PageableExecutionUtils.getPage(orderResponses, pageable, orders::getTotalElements);
+
     }
 
     @Override
