@@ -1,7 +1,7 @@
 package com.unknown.deliveryserver.domain.menu.option.entity;
 
 import com.unknown.deliveryserver.domain.menu.menu.entity.Menu;
-import com.unknown.deliveryserver.global.entity.BaseEntity;
+import com.unknown.deliveryserver.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

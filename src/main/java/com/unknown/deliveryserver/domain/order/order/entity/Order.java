@@ -2,7 +2,7 @@ package com.unknown.deliveryserver.domain.order.order.entity;
 
 import com.unknown.deliveryserver.domain.order.enumerated.OrderStatus;
 import com.unknown.deliveryserver.domain.restaurant.entity.Restaurant;
-import com.unknown.deliveryserver.global.entity.BaseEntity;
+import com.unknown.deliveryserver.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

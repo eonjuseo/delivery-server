@@ -1,6 +1,6 @@
 package com.unknown.deliveryserver.domain.restaurant.entity;
 
-import com.unknown.deliveryserver.global.entity.BaseEntity;
+import com.unknown.deliveryserver.global.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;

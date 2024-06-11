@@ -1,4 +1,4 @@
-package com.unknown.deliveryserver.global.entity;
+package com.unknown.deliveryserver.global.common.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

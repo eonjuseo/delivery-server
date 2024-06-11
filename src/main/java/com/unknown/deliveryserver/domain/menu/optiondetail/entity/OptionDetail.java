@@ -2,7 +2,7 @@ package com.unknown.deliveryserver.domain.menu.optiondetail.entity;
 
 import com.unknown.deliveryserver.domain.menu.enumerated.StockStatus;
 import com.unknown.deliveryserver.domain.menu.option.entity.Option;
-import com.unknown.deliveryserver.global.entity.BaseEntity;
+import com.unknown.deliveryserver.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
