@@ -12,15 +12,15 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class PageInfo {
-    private int page;
-    private int size;
-    private Long count;
+    private int page; // 현재 슬라이드 번호
+    private int size; // 현재 페이지 크기
+//    private Long count;
     private boolean hasNext;
 
     public static PageInfo of(Slice slice) {
         return PageInfo.builder()
-                .size(slice.getPageable().getPageSize())
-                .page(slice.getPageable().getPageNumber())
+                .size(slice.getSize())
+                .page(slice.getNumber())
                 .hasNext(slice.hasNext())
                 .build();
     }

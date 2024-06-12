@@ -7,12 +7,13 @@ import com.unknown.deliveryserver.domain.order.ordermenu.entity.OrderMenu;
 import com.unknown.deliveryserver.global.common.response.PageResponse;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface OrderService {
     OrderResponse createOrder(OrderRequest orderRequest);
     OrderResponse getOrder(Long orderId);
-    PageResponse<OrderResponse> getOrdersByRestaurantId(Long restaurantId, Long cursorId, int size);
+    PageResponse<OrderResponse> getOrdersByRestaurantId(Long restaurantId, Long cursorId, int size, LocalDate start, LocalDate end);
     BigDecimal getTotalPrice(List<OrderMenu> orderMenuList);
     List<OrderMenuResponse> createOrderMenuResponses(List<OrderMenu> orderMenuList);
 

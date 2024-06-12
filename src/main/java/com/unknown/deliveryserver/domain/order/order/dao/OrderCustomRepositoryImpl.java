@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.unknown.deliveryserver.domain.order.order.entity.QOrder.order;
@@ -17,11 +18,18 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<Order> findByRestaurantId(Pageable pageable, Long restaurantId, Long cursorId) {
+    public Slice<Order> findByRestaurantId(Pageable pageable, Long restaurantId, Long cursorId, LocalDate start, LocalDate end) {
         BooleanExpression conditions = order.restaurant.id.eq(restaurantId);
 
         if (cursorId != null) {
             conditions = conditions.and(order.id.lt(cursorId));
+        }
+
+        if (start != null) {
+            conditions = conditions.and(order.createdAt.goe(start.atStartOfDay()));
+        }
+        if (end != null) {
+            conditions = conditions.and(order.createdAt.lt(end.plusDays(1).atStartOfDay()));
         }
 
         List<Order> fetch = jpaQueryFactory

@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,9 +110,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageResponse<OrderResponse> getOrdersByRestaurantId(Long restaurantId, Long cursorId, int size) {
+    public PageResponse<OrderResponse> getOrdersByRestaurantId(Long restaurantId, Long cursorId, int size, LocalDate start, LocalDate end) {
         Pageable pageable = PageRequest.of(0, size);
-        Slice<Order> orders = orderRepository.findByRestaurantId(pageable, restaurantId, cursorId);
+        Slice<Order> orders = orderRepository.findByRestaurantId(pageable, restaurantId, cursorId, start, end);
 
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Order order : orders) {
