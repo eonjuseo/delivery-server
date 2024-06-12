@@ -33,12 +33,9 @@ public class RestaurantController {
 
     @GetMapping("{id}/orders")
     public ResponseEntity<PageResponse<OrderResponse>> getOrdersByRestaurant(@PathVariable("id") Long restaurantId,
-//                                                                             @RequestParam(value = "keyword", defaultValue = "") String keyword,
-//                                                                             @RequestParam(value = "keywordType", defaultValue = "") @Schema(example = "month,week,day") String keywordType,
-                                                                             @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                             @RequestParam(name = "cursorId", required = false) Long cursorId,
                                                                              @RequestParam(name = "size", defaultValue = "20") int size) {
-//        List<String> parseType = List.of(keywordType.split(","));
-        PageResponse<OrderResponse> orderResponse = PageResponse.of(orderService.getOrdersByRestaurantId(restaurantId, page, size));
+        PageResponse<OrderResponse> orderResponse = orderService.getOrdersByRestaurantId(restaurantId, cursorId, size);
 
         return ResponseEntity.ok().body(orderResponse);
     }

@@ -18,13 +18,14 @@ import com.unknown.deliveryserver.domain.order.orderoption.dto.OrderOptionRespon
 import com.unknown.deliveryserver.domain.order.orderoption.entity.OrderOption;
 import com.unknown.deliveryserver.domain.restaurant.dao.RestaurantRepository;
 import com.unknown.deliveryserver.domain.restaurant.entity.Restaurant;
+import com.unknown.deliveryserver.global.common.response.PageResponse;
 import com.unknown.deliveryserver.global.exception.BusinessException;
 import com.unknown.deliveryserver.global.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         List<OrderMenu> orderMenuList = new ArrayList<>();
-        for(OrderMenuRequest orderMenuRequest : orderRequest.getOrderMenuList()) {
+        for (OrderMenuRequest orderMenuRequest : orderRequest.getOrderMenuList()) {
             Menu menu = menuRepository.findById(orderMenuRequest.getMenuId())
                     .orElseThrow(() -> BusinessException.builder()
                             .response(HttpResponse.Fail.NOT_FOUND_MENU).build());
@@ -71,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
             orderMenuRepository.save(orderMenu);
             orderMenuList.add(orderMenu);
 
-            for(Long optionDetailId : orderMenuRequest.getOptionDetailIdList()) {
+            for (Long optionDetailId : orderMenuRequest.getOptionDetailIdList()) {
                 OptionDetail optionDetail = optionDetailRepository.findById(optionDetailId)
                         .orElseThrow(() -> BusinessException.builder()
                                 .response(HttpResponse.Fail.NOT_FOUND_OPTION_DETAIL).build());
@@ -108,39 +109,39 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderResponse> getOrdersByRestaurantId(Long restaurantId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Order> orders = orderRepository.findByRestaurantId(pageable, restaurantId);
+    public PageResponse<OrderResponse> getOrdersByRestaurantId(Long restaurantId, Long cursorId, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+        Slice<Order> orders = orderRepository.findByRestaurantId(pageable, restaurantId, cursorId);
 
         List<OrderResponse> orderResponses = new ArrayList<>();
-            for (Order order : orders) {
-                List<OrderMenu> orderMenuList = orderMenuRepository.findByOrderId(order.getId());
+        for (Order order : orders) {
+            List<OrderMenu> orderMenuList = orderMenuRepository.findByOrderId(order.getId());
             List<OrderMenuResponse> orderMenuResponses = createOrderMenuResponses(orderMenuList);
 
             BigDecimal totalPrice = getTotalPrice(orderMenuList);
             orderResponses.add(OrderResponse.of(order, orderMenuResponses, totalPrice));
         }
 
-//        return new PageImpl<>(orderResponses, pageable, orders.getTotalElements());
-        return PageableExecutionUtils.getPage(orderResponses, pageable, orders::getTotalElements);
+        Long lastOrderId = orderResponses.isEmpty() ? null : orderResponses.get(orderResponses.size() - 1).getId();
 
+        return PageResponse.of(new SliceImpl<>(orderResponses, pageable, orders.hasNext()), lastOrderId);
     }
 
     @Override
     public BigDecimal getTotalPrice(List<OrderMenu> orderMenuList) {
         BigDecimal totalPrice = BigDecimal.ZERO;
 
-        for(OrderMenu orderMenu : orderMenuList) {
+        for (OrderMenu orderMenu : orderMenuList) {
             BigDecimal menuPrice = orderMenu.getMenu().getMenuPrice();
             BigDecimal optionTotalPrice = BigDecimal.ZERO;
 
             List<OrderOption> orderOptionList = orderOptionRepository.findByOrderMenuId(orderMenu.getId());
-            for(OrderOption orderOption : orderOptionList) {
+            for (OrderOption orderOption : orderOptionList) {
                 optionTotalPrice = optionTotalPrice.add(orderOption.getOptionDetail().getOptionPrice());
             }
 
             BigDecimal menuTotalPrice = (menuPrice.add(optionTotalPrice)
-                                        .multiply(BigDecimal.valueOf(orderMenu.getQuantity())));
+                    .multiply(BigDecimal.valueOf(orderMenu.getQuantity())));
             totalPrice = totalPrice.add(menuTotalPrice);
         }
 

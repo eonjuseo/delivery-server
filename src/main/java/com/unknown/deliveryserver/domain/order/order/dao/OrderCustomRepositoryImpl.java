@@ -1,13 +1,12 @@
 package com.unknown.deliveryserver.domain.order.order.dao;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.unknown.deliveryserver.domain.order.order.entity.Order;
+import com.unknown.deliveryserver.global.common.response.PageInfo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -18,26 +17,20 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Order> findByRestaurantId(Pageable pageable, Long restaurantId) {
-        BooleanBuilder builder = new BooleanBuilder();
+    public Slice<Order> findByRestaurantId(Pageable pageable, Long restaurantId, Long cursorId) {
+        BooleanExpression conditions = order.restaurant.id.eq(restaurantId);
 
-        if (restaurantId != null) {
-            builder.and(order.restaurant.id.eq(restaurantId));
+        if (cursorId != null) {
+            conditions = conditions.and(order.id.lt(cursorId));
         }
 
         List<Order> fetch = jpaQueryFactory
                 .selectFrom(order)
-                .where(builder)
+                .where(conditions)
                 .orderBy(order.id.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
 
-        JPAQuery<Long> total = jpaQueryFactory
-                .select(order.count())
-                .from(order)
-                .where(builder);
-
-        return PageableExecutionUtils.getPage(fetch, pageable, total::fetchOne);
+        return PageInfo.checkLastPage(pageable, fetch);
     }
 }

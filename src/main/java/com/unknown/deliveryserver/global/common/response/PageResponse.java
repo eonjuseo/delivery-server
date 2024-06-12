@@ -1,7 +1,7 @@
 package com.unknown.deliveryserver.global.common.response;
 
 import lombok.*;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -10,11 +10,13 @@ import org.springframework.data.domain.Page;
 public class PageResponse<T> {
     private T data;
     private PageInfo pageInfo;
+    private Long lastOrderId;
 
-    public static <T> PageResponse of(Page<T> page) {
+    public static <T> PageResponse of(Slice<T> slice, Long lastOrderId) {
         return PageResponse.builder()
-                .data(page.getContent())
-                .pageInfo(PageInfo.of(page))
+                .data(slice.getContent())
+                .pageInfo(PageInfo.of(slice))
+                .lastOrderId(lastOrderId)
                 .build();
     }
 }
