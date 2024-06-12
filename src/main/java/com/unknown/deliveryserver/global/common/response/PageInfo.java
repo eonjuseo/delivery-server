@@ -15,24 +15,24 @@ public class PageInfo {
     private int page;
     private int size;
     private Long count;
-    private boolean isLast;
+    private boolean hasNext;
 
     public static PageInfo of(Slice slice) {
         return PageInfo.builder()
                 .size(slice.getPageable().getPageSize())
                 .page(slice.getPageable().getPageNumber())
-                .isLast(slice.isLast())
+                .hasNext(slice.hasNext())
                 .build();
     }
 
     public static <T> Slice<T> checkLastPage(Pageable pageable, List<T> results) {
-        boolean isLast = true;
+        boolean hasNext = false;
 
         if (results.size() > pageable.getPageSize()) {
-            isLast = false;
+            hasNext = true;
             results.remove(pageable.getPageSize());
         }
 
-        return new SliceImpl<>(results, pageable, isLast);
+        return new SliceImpl<>(results, pageable, hasNext);
     }
 }
