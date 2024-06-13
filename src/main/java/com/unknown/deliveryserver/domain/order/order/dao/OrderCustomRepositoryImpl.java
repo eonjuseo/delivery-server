@@ -25,10 +25,10 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository {
             conditions = conditions.and(order.id.lt(cursorId));
         }
 
-        if (start != null) {
+        if (start != null) { // start 날짜가 '00:00:00' 이후이거나 같은 지 확인
             conditions = conditions.and(order.createdAt.goe(start.atStartOfDay()));
         }
-        if (end != null) {
+        if (end != null) { // end 날짜가 '00:00:00' 보다 작은 지 확인
             conditions = conditions.and(order.createdAt.lt(end.plusDays(1).atStartOfDay()));
         }
 
